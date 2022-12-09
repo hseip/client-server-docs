@@ -1,86 +1,118 @@
-## Building the Client (Part 2)
+## Building the Client (Part 1)
 
-Double click on the HomePage.vue file. Enter the following code:
+We will be creating three pages:  
+### Home Page  
+<img src="Homepage.png" alt="drawing" width="600"/>
+
+### Poll Page
+<img src="Pollpage.png" alt="drawing" width="600"/>
+
+### Results Page
+<img src="Resultspage.png" alt="drawing" width="600"/>
+
+In VSCode start a new **Terminal** and change the directory to **client**:
+```
+cd client
+```
+
+Now we install the graphics package that will help us display the chart. In the Terminal enter:
+```
+npm i vue-google-charts
+```
+
+Download images:  
+https://candogram-downloads.s3.amazonaws.com/student-poll-images.zip  
+
+In VSCode click on the **client**. This will open the subdirectories.
+Before we begin we need to clean up the default app by deleting some files and folders:  
+- /public => delete all file(s) and folder(s)
+- /src => delete the **assets** folder
+- /src/components => delete all file(s)
+- /src/pages => delete IndexPage.vue
+
+From the unzipped images
+- copy the folder **icons** and **favicon.ico** to the **/public** folder.
+- copy the folder **assets** to the **/src** folder
+
+
+Open the page /src/layouts/MainLayout.vue. Delete all contents. Add the following code:
 ```
 <template>
-  <div>
-    <div class="lt-md" style="width:100%; height:200px;overflow: hidden;">
-      <q-img src="~assets/BASESchool.jpg" />
-    </div>
-    <div class="gt-sm" style="width:100%; height:400px;overflow: hidden;">
-      <q-img src="~assets/BASESchool.jpg" />
-    </div>
-    <div class="row text-center">
-      <div class="col-12 col-md-4">
-          <div class="row">
-            <div class="col">
-              <q-img src="~assets/BASELogo.jpg" width="80%" />
-            </div>
-            <div class="col">
-              <p class="q-ma-none q-mt-md">created by:</p>
-            <p class="q-mb-none text-bold">{{ creatorName }}</p>
-            <p class="q-mb-md">visit me on <a href="https://www.linkedin.com/in/henningseip/"
-                target="_blank">LinkedIn</a></p>
-            <q-img
-              src="https://media-exp1.licdn.com/dms/image/C4E03AQFRsQZEbaNOrg/profile-displayphoto-shrink_200_200/0/1516190707653?e=1675296000&v=beta&t=HB7RXqp-BRRTWRH3al8yYTl9FTOJi2Cvx2ovHI268iA"
-              style="border-radius:50%;" width="50%" />
-            </div>
-          </div>
-      </div>
-      <div class="col-12 col-md-8">
-        <h2 class="gt-sm text-center q-mb-md">Job Interest Poll</h2>
-        <h3 class="lt-md text-center q-mb-md">Job Interest Poll</h3>
-        <div class="container">
-          <p>Welcome to the BASE job interest poll!
-            The purpose of this poll is to obtain information about what job you may be interested interested when you
-            enter your work life.
-            This will help us to allocate resources for your education.</p>
-          <p>Enter your school email to get started.</p>
-          <div class="row">
-            <q-input outlined v-model="email" label="Email" style="width:80%" @focus="error = false" />
-            <q-btn color="primary" class="q-ml-md" @click="go">Go</q-btn>
-          </div>
-          <p v-if="error" class="text-red text-bold">Email address is invalid or from an unknown school.</p>
-        </div>
-      </div>
-    </div>
-  </div>
+  <q-layout view="lHh Lpr lFf">
+    <q-page-container>
+      <router-view />
+    </q-page-container>
+  </q-layout>
 </template>
 
 <script>
+
 export default {
-  data() {
-    return {
-      error: false,
-      email: '',
-      domains: ['bronxsoftware.org', 'bronxinternationalhs.com']
-    }
-  },
-  computed: {
-    creatorName () {
-      return process.env.CREATOR_NAME
-    }
-  },
-  methods: {
-    go() {
-      if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(this.email) && this.domains.includes(this.email.split('@')[1])) {
-        this.$router.push({ name: 'Poll', params: { user: this.email } })
-      } else {
-        this.error = true
-      }
-    }
-  }
+  name: 'MainLayout'
 }
 </script>
-
-<style>
-.container {
-  width: 70%;
-  margin: auto;
-}
-</style>
 ```
-For the **created by** section use your own information (LinkedIn profile link and image).  
+Close the MainLayout.vue file.
+Click on the **pages** folder and create three files:
+- HomePage.vue
+- PollPage.vue
+- ResultsPage.vue
+
+Click on the router directory and open the routes.js file. In the file change the first route target file from **IndexPage.vue** to **HomePage.vue** and add the name attribute.   
+Next add the two addtional routes. The changed routes.js file should look like this:
+```
+const routes = [
+  {
+    path: '/',
+    component: () => import('layouts/MainLayout.vue'),
+    children: [
+      { path: '', component: () => import('src/pages/HomePage.vue'), name: 'Home' },
+      { path: 'poll/:user', component: () => import('src/pages/PollPage.vue'), name: 'Poll' },
+      { path: 'results', component: () => import('src/pages/ResultsPage.vue'), name: 'Results' }
+    ]
+  },
+
+  // Always leave this as last one,
+  // but you can also remove it
+  {
+    path: '/:catchAll(.*)*',
+    component: () => import('pages/ErrorNotFound.vue')
+  }
+]
+
+export default routes
+```
+
+
+Doubleclick the file **quasar.config.js**. Find the line **vueRouterMode: 'hash'**. Replace **hash** with **history**.
+
+Underneath this entry enter the following code:
+```
+      env: {
+        BASE_URL: 'http://localhost:3000', 
+        CREATOR_NAME: 'John Doe',
+        CREATOR_EMAIL: 'john@bronxsoftware.org'
+      },
+      distDir: '../server/public'
+ ```     
+For the CREATOR_NAME and CREATOR_EMAIL variables use your own information.
+
+In the **devServer** section change the **open** prop to look like this:
+```
+devServer: {
+  open: {
+    app: { name: 'google chrome' }
+  }
+}
+```
+
+In the framework section of this file add **'Notify'** to the **plugins** bracket so that it looks like this:
+```
+plugins: [
+        'Notify'
+      ]
+```
+
 
 
 

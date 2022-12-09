@@ -1,139 +1,87 @@
-## Building the Client (Part 3)
+## Building the Client (Part 2)
 
-Doubleclick on the PollPage.vue file. Add the following code:
+Double click on the HomePage.vue file. Enter the following code:
 ```
 <template>
   <div>
-    <h3 class="gt-sm text-center">Job Titles in Demand in New York City 2022</h3>
-    <h5 class="lt-md text-center">Job Titles in Demand in New York City 2022</h5>
-    <div class="row">
-      <div class="col-8" style="margin:auto;">
-        <q-card>
-          <q-card-section>
-            <span class="text-bold">Instructions:</span> The table below shows the jobs most in demand by employers in
-            New York City.
-            Each entry lists the number of job openings, the number of employers with job openings, the estimated
-            average annual wage and the required education.
-            If you cannot find your perfect choice pick something that is most similar.
-            <br /><br />
-            You can sort the table in multiple ways by using the dropbox below.
-            <br /><br />
-            This is an anonymous poll. Your name will not be visible to others. You can change your choice at any time.
-            <br /><br />
-            <span class="text-bold">SAVE your choice:</span> Make a selection, then scroll down to the end of the table
-            to save your choice.
-          </q-card-section>
-        </q-card>
-        <q-card class="q-mt-sm">
-          <q-card-section>
-            <div class="q-py-md">
-              <q-select outlined v-model="sort" :options="options" label="Sort" />
+    <div class="lt-md" style="width:100%; height:200px;overflow: hidden;">
+      <q-img src="~assets/BASESchool.jpg" />
+    </div>
+    <div class="gt-sm" style="width:100%; height:400px;overflow: hidden;">
+      <q-img src="~assets/BASESchool.jpg" />
+    </div>
+    <div class="row text-center">
+      <div class="col-12 col-md-4">
+          <div class="row">
+            <div class="col">
+              <q-img src="~assets/BASELogo.jpg" width="80%" />
             </div>
-            <q-list bordered separator>
-              <q-item v-for="(jobTitle, idx) in jobTitles" :key="idx">
-                <q-item-section avatar>
-                  <q-radio v-model="selected" :val="jobTitle.JobTitle" />
-                </q-item-section>
-                <q-item-section>
-                  <q-item-label class="text-bold">{{ jobTitle.JobTitle }}</q-item-label>
-                  <q-item-label lines="4">Job Openings: {{ jobTitle.JobCount }} | Employers: {{ jobTitle.EmployerCount
-                  }} |
-                    Avg Annual Wage: ${{ jobTitle.AvgAnnualWage.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,")
-                    }} | required education: <span class="text-bold"
-                      :class="jobTitle.RequiredEducation === 'mostly college' ? 'text-red' : 'text-blue'">{{
-                          jobTitle.RequiredEducation
-                      }}</span></q-item-label>
-                </q-item-section>
-              </q-item>
-            </q-list>
-          </q-card-section>
-          <q-separator dark />
-          <q-card-actions align="around">
-            <q-btn color="green" @click="saveChoice">Save your choice</q-btn>
-            <q-btn color="blue" :to="{ name: 'Results' }">Show poll results</q-btn>
-          </q-card-actions>
-        </q-card>
+            <div class="col">
+              <p class="q-ma-none q-mt-md">created by:</p>
+            <p class="q-mb-none text-bold">{{ creatorName }}</p>
+            <p class="q-mb-md">visit me on <a href="https://www.linkedin.com/in/henningseip/"
+                target="_blank">LinkedIn</a></p>
+            <q-img
+              src="https://media-exp1.licdn.com/dms/image/C4E03AQFRsQZEbaNOrg/profile-displayphoto-shrink_200_200/0/1516190707653?e=1675296000&v=beta&t=HB7RXqp-BRRTWRH3al8yYTl9FTOJi2Cvx2ovHI268iA"
+              style="border-radius:50%;" width="50%" />
+            </div>
+          </div>
+      </div>
+      <div class="col-12 col-md-8">
+        <h2 class="gt-sm text-center q-mb-md">Job Interest Poll</h2>
+        <h3 class="lt-md text-center q-mb-md">Job Interest Poll</h3>
+        <div class="container">
+          <p>Welcome to the BASE job interest poll!
+            The purpose of this poll is to obtain information about what job you may be interested interested when you
+            enter your work life.
+            This will help us to allocate resources for your education.</p>
+          <p>Enter your school email to get started.</p>
+          <div class="row">
+            <q-input outlined v-model="email" label="Email" style="width:80%" @focus="error = false" />
+            <q-btn color="primary" class="q-ml-md" @click="go">Go</q-btn>
+          </div>
+          <p v-if="error" class="text-red text-bold">Email address is invalid or from an unknown school.</p>
+        </div>
       </div>
     </div>
   </div>
 </template>
+
 <script>
 export default {
   data() {
     return {
       error: false,
-      user: null,
-      jobTitles: [],
-      selected: null,
-      options: ['title', 'jobs', 'employers', 'wage'],
-      sort: 'title'
+      email: '',
+      domains: ['bronxsoftware.org', 'bronxinternationalhs.com']
     }
   },
-  watch: {
-    sort() {
-      this.sortJobTitles(this.jobTitles)
+  computed: {
+    creatorName () {
+      return process.env.CREATOR_NAME
     }
   },
   methods: {
-    sortJobTitles(jobTitles) {
-      this.jobTitles = jobTitles.sort((a, b) => {
-        switch (this.sort) {
-          case 'title':
-            if (a.JobTitle > b.JobTitle) return 1;
-            if (a.JobTitle < b.JobTitle) return -1;
-            return 0
-            break
-          case 'jobs':
-            if (a.JobCount < b.JobCount) return 1;
-            if (a.JobCount > b.JobCount) return -1;
-            return 0
-            break
-          case 'employers':
-            if (a.EmployerCount < b.EmployerCount) return 1;
-            if (a.EmployerCount > b.EmployerCount) return -1;
-            return 0
-            break
-          case 'wage':
-            if (a.AvgAnnualWage < b.AvgAnnualWage) return 1;
-            if (a.AvgAnnualWage > b.AvgAnnualWage) return -1;
-            return 0
-            break
-
-        }
-      })
-    },
-    async saveChoice() {
-      const data = {
-        email: this.$route.params.user,
-        JobTitle: this.selected,
-        CreatorEmail: process.env.CREATOR_EMAIL
+    go() {
+      if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(this.email) && this.domains.includes(this.email.split('@')[1])) {
+        this.$router.push({ name: 'Poll', params: { user: this.email } })
+      } else {
+        this.error = true
       }
-      const result = await fetch(process.env.BASE_URL + '/api/poll', {
-        method: 'POST',
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(data)
-      })
-        .then(() => {
-         this.$q.notify({
-          message: 'Your choice has been recorded. Thank you!',
-          color: 'positive'
-         })
-        })
-    }
-  },
-  mounted() {
-    if (typeof this.$route.params.user !== 'undefined') {
-      this.user = this.$route.params.user
-      fetch(process.env.BASE_URL + '/api/joblist')
-        .then(response => response.json())
-        .then(jobTitles => {
-          this.sortJobTitles(jobTitles)
-        })
     }
   }
 }
 </script>
+
+<style>
+.container {
+  width: 70%;
+  margin: auto;
+}
+</style>
 ```
+For the **created by** section use your own information (LinkedIn profile link and image).  
+
+
+
+
