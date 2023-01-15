@@ -103,7 +103,7 @@ devServer: {
   open: {
     app: { name: 'google chrome' }
   }
-}
+},
 ```
 
 In the framework section of this file add **'Notify'** to the **plugins** bracket so that it looks like this:

@@ -253,7 +253,7 @@ Click in the VSCode Terminal (server) and enter:
 npm run dev
 ```
 This will start the server. There should be no errors (see image).  
-<img src="terminal-server.png" alt="terminal" align="left"/>  
+<img src="terminal-server.png" alt="terminal" align="left"/> .   
 
 
 In the **request.rest** document click the small link **Send Request** above the first GET command. The result should be the list of job titles we uploaded to the database in json format.  

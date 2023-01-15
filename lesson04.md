@@ -26,6 +26,16 @@ Prepare this directory for software version control with Git:
 ```
 git init
 ```
+Next we create a subdirectory and an empty file in preparation for our production server on AWS. We will need it once we are ready to move our project to production.  
+```
+mkdir AWS_install_scripts
+cd AWS_install_scripts
+touch appspec.yml
+cd ..
+```
+Make sure that you are back at the **student-poll** directory level!   
+
+
 Next initialize a new app called 'client' using Vue.js/Quasar:
 ```
 npm init quasar

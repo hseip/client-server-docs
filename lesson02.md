@@ -8,26 +8,30 @@ For our software development environment we will need the following components:
 - VSCode (code editor) 
 - Git (version control)
 
-
+### <a name="install-brew"></a>Install Brew
+We install the MacOs package manager Brew. Open Chrome and goto the web page https://brew.sh/ 
+Next open a terminal on your Macbook. For this click the Launchpad and click the Other tools icon. Here you find the Terminal. Click on Terminal to start it. From the Brew homepage (Chrome) copy the shell command and paste it into your terminal. Hit enter. This will install Brew. Once the installation has finished you need to add Homebrew to your PATH. Copy / paste the following commands into your terminal and hit enter:
+```
+    echo '# Set PATH, MANPATH, etc., for Homebrew.' >> /Users/student/.zprofile
+    echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >> /Users/student/.zprofile
+    eval "$(/opt/homebrew/bin/brew shellenv)"
+```
 
 ### <a name="install-git"></a>Install Git
-On Google search "**install git without brew**"
-click on the entry "**Install Git | Atlassian Git Tutorial**"
-Scroll down the screen to "Download the latest Git for Mac Installer". Click the link
-Click on the link for "Download Latest Version" (green button)
-Open the window with the downloaded package and double click. A message will appear that the file cannot be installed.
-Open the Apple Settings -> Security & Privacy. On the bottom is a message and button **Allow anyway** that allows you to install the package.
-Install the Git package.
-Open the Terminal and enter:
+We now install Git. Git is a software version control system. In your terminal enter:
+```
+brew install git
+```
+Then check the Git installation. In your terminal enter:
 ```
 git --version
 ```
 If Git was installed you will see the version message.
 
-Create a Git configuration for yourself:
+Create a Git configuration for yourself (use your name and BASE email address):
 ```
 git config  --global user.name “Henning Seip”
-git config  --global user.email “Henning.Seip@candogram.com”
+git config  --global user.email “Henning@bronxsoftware.org”
 git config  --global init.defaultBranch main
 ```
 
@@ -44,10 +48,8 @@ You will see a welcome message. Use Crtl+D to exit Node.js
 
 
 ### <a name="install-vue"></a>Install Vue.js and Quasar
-Goto to http://quasar.dev
-The Quasar installation include the Vue.js package. Vue.js can be installed without Quasar and used with other CSS frameworks or none.
-Click the "Getting Started" link, then Quasar CLI.
-From the page use the following command and enter it into the Terminal, perceded by the superuser "**sudo**"
+The Quasar installation include the Vue.js package. Vue.js can be installed without Quasar and used with other CSS frameworks or none. The documenation is here: Goto to http://quasar.dev  
+Enter the install command into the Terminal, proceeded by the superuser "**sudo**"
 ```
 sudo npm i -g @quasar/cli
 ```
@@ -84,10 +86,10 @@ On the MySQL Downloads screen, click on the **Archives** tab
 Select the latest product version that matches your MacBook's OS version. For Mac v11 the latest version is **8.0.28**. A list of downloadable packages will be displayed.
 From the list of downloadable packages find the one that matches your MacBooks OS version and Chip. For M1 it is ARM, DMG Archive.
 Click the Download button.
-Once the package has downloaded, doubleclick the package and walk through the install process.
+Once the package has downloaded, doubleclick the package and walk through the install process.  
 **IMPORTANT:** Choose
 - "Use Legacy Password Encryption"
-- use "**basebase**" as the password.
+- use "**baseroot**" as the password.
 
 After the install:
 Open the Mac Terminal to configure the MySQL database:
@@ -133,8 +135,9 @@ exit;
 
 Activate the MySQL configuration file:
 In the Systems Settings click on the MySQL app
-Click "**Stop MySQL Server**"
-Click the Configuration tab
+Click "**Stop MySQL Server**" .  
+Click the Configuration tab 
+Click the check box "Configuration File".  
 Click Configuration File box, add the path and filename:
 ```
 /etc/my.cnf
@@ -146,12 +149,12 @@ Now we install **MySQL Workbench**.
 On Google search for "**MacOS MySQL Workbench**" and go to the Download page.
 CLick the Download button. Ignore the Login and Sign up buttons. Click the link below "**No thanks, just start my download**"
 Download and install the MySQL Workbench by dragging it to the Applications icon.  
-Open the Workbench from the Mac Launchpad
+Open the Workbench from the Mac Launchpad. If you are prompted to install **Rosetta** then do so.
 Click on the wrench to open the configuration.  
 - Select the default connection "**Local instance 3306**"
 - Change the name of the default connection to "BASE"
 - change the Username to 'baseuser'
-Hi the Test Connection button and enter the password '**base**' for the '**baseuser**'. With the connection valid go the next step.
+Hit the Test Connection button and enter the password '**base**' for the '**baseuser**'. With the connection valid go the next step.
 
 Click the Advanced tab and add the following entry to the Others box:
 ```
@@ -196,7 +199,7 @@ CREATE TABLE `Jobs_In_Demand` (
   PRIMARY KEY (`JobTitleID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
-load data local infile '/Users/henningseip/Downloads/BASEJobInterest.csv' into table Jobs_In_Demand fields terminated by ',' optionally enclosed by '"' lines terminated by '\n' IGNORE 1 LINES;
+load data local infile '/Users/student/Downloads/BASEJobInterest.csv' into table Jobs_In_Demand fields terminated by ',' optionally enclosed by '"' lines terminated by '\n' IGNORE 1 LINES;
 ```
 
 

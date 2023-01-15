@@ -56,3 +56,63 @@ export default {
 }
 </script>
 ```
+
+Let's test the software!  
+Click into the **client** Terminal and enter:
+```
+quasar dev
+```
+The application will start showing the home screen.  
+Enter an BASE email address and hit the **GO** button.  
+On the next screen select a job title and scroll all the way down and click the **SAVE YOUR CHOICE** button.  
+Next click the **SHOW POLL RESULTS** button.  You will see the bar chart. 
+
+Finally we prepare our project for production.  
+In VSCode open the empty **appspec.yml** file and enter the following code:
+```
+version: 0.0
+os: linux
+files:
+  - source: /
+    destination: /home/ubuntu/BASE
+hooks:
+  AfterInstall:
+    - location: AWS_install_scripts/installApp.sh
+      timeout: 600
+      runas: root
+```
+
+Click on the **AWS_install_scripts** directory and create a new file called **installApp.sh**. This will be a shell script that will install our software on the production server.  
+
+Enter the following code:
+```
+#!/bin/bash
+
+#----------------------------------
+# install the node server
+#----------------------------------
+cp /home/ubuntu/env/env /home/ubuntu/BASE/server/.env
+
+cd /home/ubuntu/BASE/server
+npm install
+
+if [ ! -d "$public" ]; then
+  # Control will enter here if $public doesn't exist.
+  mkdir public
+fi
+
+
+#----------------------------------
+# build the client app
+#----------------------------------
+cd /home/ubuntu/BASE/client
+npm install
+quasar build
+
+#start Node server.
+systemctl start nodejs
+```
+
+
+
+
